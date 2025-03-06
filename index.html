@@ -1,12 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre Entrega 2</title>
+    <link rel="stylesheet" href="./css/styles.css">
     <script defer src="./js/main.js"></script>
-    <title>Pre Entrega 1</title>
 </head>
 <body>
-    <h1>Pre Entrega 1</h1>
+    <h1>Pre Entrega 2</h1>
+
+    <input type="text" id="buscarProducto" placeholder="Buscar producto...">
+    <input type="number" id="filtrarPrecio" placeholder="Precio máximo">
+    <button id="filtrar">Filtrar</button>
+    <button id="limpiarFiltros">Limpiar Filtros</button>
+
+    <section id="productos"></section>
+
+    <h2>Carrito de Compras</h2>
+    <ul id="carrito"></ul>
+    <p>Total: $<span id="total">0</span></p>
+
+    <h3>Simulación de Cuotas</h3>
+    <select id="cuotas">
+        <option value="1">1 cuota (sin interés)</option>
+        <option value="3">3 cuotas</option>
+        <option value="6">6 cuotas</option>
+        <option value="12">12 cuotas</option>
+    </select>
+    <button id="calcularCuotas">Calcular</button>
+    <p id="pagoCuotas"></p>
+
+    <button id="comprar">Comprar</button>
+    <p id="mensajeCompra"></p>
 </body>
 </html>
