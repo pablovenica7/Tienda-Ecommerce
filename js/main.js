@@ -83,38 +83,33 @@ const calcularCuotas = () => {
   document.getElementById("pagoCuotas").innerText = `Pago en ${cuotas} cuotas de $${cuota}`;
 };
 
-const finalizarCompra = () => {
+const mostrarEntrega = () => {
   if (carrito.length === 0) {
     Swal.fire("Carrito vacío", "Agrega productos antes de continuar", "warning");
     return;
   }
-  document.getElementById("checkout").style.display = "block";
-  document.getElementById("mensajeCompra").innerText = "";
+  document.getElementById("entrega").style.display = "block";
 };
 
-const confirmarCompra = (e) => {
+const mostrarPago = (e) => {
   e.preventDefault();
-  const nombre = document.getElementById("nombre").value;
-  const email = document.getElementById("email").value;
-  const direccion = document.getElementById("direccion").value;
+  document.getElementById("entrega").style.display = "none";
+  document.getElementById("pago").style.display = "block";
+};
+
+const finalizarCompra = (e) => {
+  e.preventDefault();
   const metodoPago = document.getElementById("metodoPago").value;
-  const envio = document.getElementById("envio").value;
-  const total = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
-  const resumen = `
-    <h3>¡Gracias por tu compra, ${nombre}!</h3>
-    <p>Resumen de la compra:</p>
-    <ul>
-      ${carrito.map(p => `<li>${p.nombre} x ${p.cantidad} - $${p.precio * p.cantidad}</li>`).join("")}
-    </ul>
-    <p>Total: $${total}</p>
-    <p>Envío: ${envio}</p>
-    <p>Método de pago: ${metodoPago}</p>
-    <p>Confirmación enviada a: ${email}</p>
-  `;
-  document.getElementById("resumenCompra").innerHTML = resumen;
+  if (!metodoPago) return;
   carrito = [];
   guardarCarrito();
   renderizarCarrito();
+  document.getElementById("pago").style.display = "none";
+  Swal.fire({
+    icon: "success",
+    title: "¡Gracias por tu compra!",
+    text: "Tu pedido ha sido procesado exitosamente."
+  });
 };
 
 document.getElementById("filtrar").addEventListener("click", () => {
@@ -131,8 +126,8 @@ document.getElementById("limpiarFiltros").addEventListener("click", () => {
 });
 
 document.getElementById("calcularCuotas").addEventListener("click", calcularCuotas);
-document.getElementById("comprar").addEventListener("click", finalizarCompra);
-document.getElementById("formularioCheckout").addEventListener("submit", confirmarCompra);
+document.getElementById("agregarDatosEntrega").addEventListener("click", mostrarEntrega);
+document.getElementById("formEntrega").addEventListener("submit", mostrarPago);
+document.getElementById("formPago").addEventListener("submit", finalizarCompra);
 
 renderizarCarrito();
-
