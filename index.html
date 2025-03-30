@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tienda de Ropa - Proyecto Final</title>
+  <title>Tienda de Ropa - Catálogo</title>
   <link rel="stylesheet" href="./css/style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script defer src="./js/main.js"></script>
 </head>
 <body>
@@ -24,44 +23,10 @@
     </section>
 
     <aside class="carrito">
-      <h2>Carrito de Compras</h2>
-      <ul id="carrito"></ul>
-      <p>Total: $<span id="total">0</span></p>
-      <select id="cuotas">
-        <option value="1">1 cuota (sin interés)</option>
-        <option value="3">3 cuotas</option>
-        <option value="6">6 cuotas</option>
-        <option value="12">12 cuotas</option>
-      </select>
-      <button id="calcularCuotas">Calcular</button>
-      <p id="pagoCuotas"></p>
-      <button id="agregarDatosEntrega">Agregar al carrito</button>
+      <h2>¿Listo para comprar?</h2>
+      <p>Revisá tu carrito y seguí con la compra.</p>
+      <a href="./pages/carrito.html" class="btn-principal">Ir al carrito</a>
     </aside>
   </main>
-
-  <section class="checkout" id="entrega" style="display: none;">
-    <h2>Datos de Entrega</h2>
-    <form id="formEntrega">
-      <input type="text" id="nombre" placeholder="Nombre completo" required value="Juan Perez" />
-      <input type="email" id="email" placeholder="Correo electrónico" required value="juan@mail.com" />
-      <input type="text" id="direccion" placeholder="Dirección de envío" required value="Av. Siempre Viva 742" />
-      <button type="submit">Continuar</button>
-    </form>
-  </section>
-
-  <section class="checkout" id="pago" style="display: none;">
-    <h2>Forma de Pago</h2>
-    <form id="formPago">
-      <select id="metodoPago" required>
-        <option value="">Seleccionar método de pago</option>
-        <option value="Efectivo">Efectivo</option>
-        <option value="Tarjeta">Tarjeta</option>
-        <option value="Transferencia">Transferencia</option>
-      </select>
-      <button type="submit">Comprar</button>
-    </form>
-  </section>
 </body>
 </html>
-
-
