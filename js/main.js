@@ -1,111 +1,138 @@
-const productos = [
-    { id: 1, nombre: "Camiseta", precio: 5000 },
-    { id: 2, nombre: "Pantalón", precio: 8000 },
-    { id: 3, nombre: "Zapatillas", precio: 12000 },
-    { id: 4, nombre: "Gorra", precio: 2500 },
-    { id: 5, nombre: "Buzo", precio: 10000 },
-];
+let productos = [];
 
-const obtenerCarrito = () => JSON.parse(localStorage.getItem("carrito")) || [];
-let carrito = obtenerCarrito();
+fetch("./bd/productos.json")
+  .then(res => res.json())
+  .then(data => {
+    productos = data;
+    renderizarProductos();
+  });
 
+let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 const guardarCarrito = () => localStorage.setItem("carrito", JSON.stringify(carrito));
 
 const renderizarProductos = (productosFiltrados = productos) => {
-    let contenedor = document.getElementById("productos");
-    contenedor.innerHTML = "";
-
-    productosFiltrados.forEach(producto => {
-        let card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-            <h3>${producto.nombre}</h3>
-            <p>Precio: $${producto.precio}</p>
-            <button onclick="agregarAlCarrito(${producto.id})">Agregar</button>
-        `;
-        contenedor.appendChild(card);
-    });
+  const contenedor = document.getElementById("productos");
+  contenedor.innerHTML = "";
+  productosFiltrados.forEach(producto => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <h3>${producto.nombre}</h3>
+      <p>Precio: $${producto.precio}</p>
+      <button onclick="agregarAlCarrito(${producto.id})">Agregar</button>
+    `;
+    contenedor.appendChild(card);
+  });
 };
 
 const renderizarCarrito = () => {
-    let contenedorCarrito = document.getElementById("carrito");
-    let total = document.getElementById("total");
+  const contenedor = document.getElementById("carrito");
+  contenedor.innerHTML = "";
+  let total = 0;
 
-    contenedorCarrito.innerHTML = "";
-    let totalCompra = 0;
-
-    carrito.forEach((producto, index) => {
-        let item = document.createElement("li");
-        item.innerHTML = `${producto.nombre} - $${producto.precio} 
-                          <button onclick="eliminarDelCarrito(${index})">X</button>`;
-        contenedorCarrito.appendChild(item);
-        totalCompra += producto.precio;
-    });
-
-    total.innerText = totalCompra;
+  carrito.forEach(producto => {
+    const item = document.createElement("li");
+    item.innerHTML = `
+      ${producto.nombre} - $${producto.precio} x ${producto.cantidad}
+      <button onclick="sumarUnidad(${producto.id})">+</button>
+      <button onclick="restarUnidad(${producto.id})">-</button>
+    `;
+    contenedor.appendChild(item);
+    total += producto.precio * producto.cantidad;
+  });
+  document.getElementById("total").innerText = total;
 };
 
 const agregarAlCarrito = (id) => {
-    let producto = productos.find(p => p.id === id);
-    carrito.push(producto);
-    guardarCarrito();
-    renderizarCarrito();
+  const producto = productos.find(p => p.id === id);
+  const enCarrito = carrito.find(p => p.id === id);
+  if (enCarrito) {
+    enCarrito.cantidad++;
+  } else {
+    carrito.push({ ...producto, cantidad: 1 });
+  }
+  guardarCarrito();
+  renderizarCarrito();
 };
 
-const eliminarDelCarrito = (index) => {
-    carrito.splice(index, 1);
-    guardarCarrito();
-    renderizarCarrito();
+const sumarUnidad = (id) => {
+  const producto = carrito.find(p => p.id === id);
+  producto.cantidad++;
+  guardarCarrito();
+  renderizarCarrito();
 };
 
-document.getElementById("comprar").addEventListener("click", () => {
-    let mensajeCompra = document.getElementById("mensajeCompra");
+const restarUnidad = (id) => {
+  const producto = carrito.find(p => p.id === id);
+  producto.cantidad--;
+  if (producto.cantidad === 0) {
+    carrito = carrito.filter(p => p.id !== id);
+  }
+  guardarCarrito();
+  renderizarCarrito();
+};
 
-    if (carrito.length === 0) {
-        mensajeCompra.innerText = "El carrito está vacío. Agrega productos antes de comprar.";
-        mensajeCompra.style.color = "red";
-    } else {
-        mensajeCompra.innerText = "¡Compra realizada con éxito! Gracias por tu compra.";
-        mensajeCompra.style.color = "green";
+const calcularCuotas = () => {
+  const total = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
+  const cuotas = parseInt(document.getElementById("cuotas").value);
+  let interes = 1;
+  if (cuotas === 3) interes = 1.05;
+  if (cuotas === 6) interes = 1.10;
+  if (cuotas === 12) interes = 1.20;
+  const cuota = (total * interes / cuotas).toFixed(2);
+  document.getElementById("pagoCuotas").innerText = `Pago en ${cuotas} cuotas de $${cuota}`;
+};
 
-        carrito = [];
-        guardarCarrito();
-        renderizarCarrito();
-    }
-});
+const finalizarCompra = () => {
+  if (carrito.length === 0) {
+    Swal.fire("Carrito vacío", "Agrega productos antes de continuar", "warning");
+    return;
+  }
+  document.getElementById("checkout").style.display = "block";
+  document.getElementById("mensajeCompra").innerText = "";
+};
+
+const confirmarCompra = (e) => {
+  e.preventDefault();
+  const nombre = document.getElementById("nombre").value;
+  const email = document.getElementById("email").value;
+  const direccion = document.getElementById("direccion").value;
+  const metodoPago = document.getElementById("metodoPago").value;
+  const envio = document.getElementById("envio").value;
+  const total = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
+  const resumen = `
+    <h3>¡Gracias por tu compra, ${nombre}!</h3>
+    <p>Resumen de la compra:</p>
+    <ul>
+      ${carrito.map(p => `<li>${p.nombre} x ${p.cantidad} - $${p.precio * p.cantidad}</li>`).join("")}
+    </ul>
+    <p>Total: $${total}</p>
+    <p>Envío: ${envio}</p>
+    <p>Método de pago: ${metodoPago}</p>
+    <p>Confirmación enviada a: ${email}</p>
+  `;
+  document.getElementById("resumenCompra").innerHTML = resumen;
+  carrito = [];
+  guardarCarrito();
+  renderizarCarrito();
+};
 
 document.getElementById("filtrar").addEventListener("click", () => {
-    let filtroNombre = document.getElementById("buscarProducto").value.toLowerCase();
-    let filtroPrecio = parseFloat(document.getElementById("filtrarPrecio").value);
-
-    let productosFiltrados = productos.filter(producto => 
-        (producto.nombre.toLowerCase().includes(filtroNombre)) && 
-        (isNaN(filtroPrecio) || producto.precio <= filtroPrecio)
-    );
-
-    renderizarProductos(productosFiltrados);
+  const nombre = document.getElementById("buscarProducto").value.toLowerCase();
+  const maxPrecio = parseFloat(document.getElementById("filtrarPrecio").value);
+  const filtrados = productos.filter(p => p.nombre.toLowerCase().includes(nombre) && (isNaN(maxPrecio) || p.precio <= maxPrecio));
+  renderizarProductos(filtrados);
 });
 
 document.getElementById("limpiarFiltros").addEventListener("click", () => {
-    document.getElementById("buscarProducto").value = "";
-    document.getElementById("filtrarPrecio").value = "";
-    renderizarProductos();
+  document.getElementById("buscarProducto").value = "";
+  document.getElementById("filtrarPrecio").value = "";
+  renderizarProductos();
 });
 
-document.getElementById("calcularCuotas").addEventListener("click", () => {
-    let totalCompra = carrito.reduce((total, producto) => total + producto.precio, 0);
-    let cuotas = parseInt(document.getElementById("cuotas").value);
+document.getElementById("calcularCuotas").addEventListener("click", calcularCuotas);
+document.getElementById("comprar").addEventListener("click", finalizarCompra);
+document.getElementById("formularioCheckout").addEventListener("submit", confirmarCompra);
 
-    let interes = 1;
-    if (cuotas === 3) interes = 1.05;
-    if (cuotas === 6) interes = 1.10;
-    if (cuotas === 12) interes = 1.20;
-
-    let pagoMensual = (totalCompra * interes / cuotas).toFixed(2);
-    document.getElementById("pagoCuotas").innerText = `Pago en ${cuotas} cuotas: $${pagoMensual} por mes`;
-});
-
-renderizarProductos();
 renderizarCarrito();
-
 
