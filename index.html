@@ -1,37 +1,69 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pre Entrega 2</title>
-    <link rel="stylesheet" href="./css/style.css">
-    <script defer src="./js/main.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tienda de Ropa - Proyecto Final</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script defer src="./js/main.js"></script>
 </head>
 <body>
-    <h1>Pre Entrega 2</h1>
+  <header>
+    <h1>Tienda de Ropa</h1>
+  </header>
 
-    <input type="text" id="buscarProducto" placeholder="Buscar producto...">
-    <input type="number" id="filtrarPrecio" placeholder="Precio máximo">
-    <button id="filtrar">Filtrar</button>
-    <button id="limpiarFiltros">Limpiar Filtros</button>
+  <main class="layout">
+    <section class="productos">
+      <h2>Catálogo de Productos</h2>
+      <input type="text" id="buscarProducto" placeholder="Buscar producto...">
+      <input type="number" id="filtrarPrecio" placeholder="Precio máximo">
+      <button id="filtrar">Filtrar</button>
+      <button id="limpiarFiltros">Limpiar Filtros</button>
+      <div id="productos"></div>
+    </section>
 
-    <section id="productos"></section>
-
-    <h2>Carrito de Compras</h2>
-    <ul id="carrito"></ul>
-    <p>Total: $<span id="total">0</span></p>
-
-    <h3>Simulación de Cuotas</h3>
-    <select id="cuotas">
+    <aside class="carrito">
+      <h2>Carrito de Compras</h2>
+      <ul id="carrito"></ul>
+      <p>Total: $<span id="total">0</span></p>
+      <select id="cuotas">
         <option value="1">1 cuota (sin interés)</option>
         <option value="3">3 cuotas</option>
         <option value="6">6 cuotas</option>
         <option value="12">12 cuotas</option>
-    </select>
-    <button id="calcularCuotas">Calcular</button>
-    <p id="pagoCuotas"></p>
+      </select>
+      <button id="calcularCuotas">Calcular</button>
+      <p id="pagoCuotas"></p>
+      <button id="comprar">Finalizar Compra</button>
+      <p id="mensajeCompra"></p>
+    </aside>
+  </main>
 
-    <button id="comprar">Comprar</button>
-    <p id="mensajeCompra"></p>
+  <section class="checkout" id="checkout" style="display: none;">
+    <h2>Checkout</h2>
+    <form id="formularioCheckout">
+      <input type="text" id="nombre" placeholder="Nombre completo" required value="Juan Perez">
+      <input type="email" id="email" placeholder="Correo electrónico" required value="juan@mail.com">
+      <input type="text" id="direccion" placeholder="Dirección de envío" required value="Av. Siempre Viva 742">
+
+      <select id="metodoPago" required>
+        <option value="">Método de pago</option>
+        <option value="Tarjeta">Tarjeta</option>
+        <option value="Transferencia">Transferencia</option>
+        <option value="Efectivo">Efectivo</option>
+      </select>
+
+      <select id="envio" required>
+        <option value="">Tipo de envío</option>
+        <option value="Retiro">Retiro en tienda</option>
+        <option value="Envio">Envío a domicilio</option>
+      </select>
+
+      <button type="submit">Confirmar Compra</button>
+    </form>
+    <div id="resumenCompra"></div>
+  </section>
 </body>
 </html>
+
