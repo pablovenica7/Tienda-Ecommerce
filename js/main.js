@@ -115,7 +115,8 @@ function calcularCuotas() {
 }
 
 // Página: index.html (catálogo)
-if (document.getElementById("productos")) {
+const productosDOM = document.getElementById("productos");
+if (productosDOM) {
   const filtrarBtn = document.getElementById("filtrar");
   const limpiarBtn = document.getElementById("limpiarFiltros");
 
@@ -138,7 +139,8 @@ if (document.getElementById("productos")) {
 }
 
 // Página: carrito.html
-if (document.getElementById("carrito")) {
+const carritoDOM = document.getElementById("carrito");
+if (carritoDOM) {
   renderizarCarrito();
   const calcularBtn = document.getElementById("calcularCuotas");
   if (calcularBtn) calcularBtn.addEventListener("click", calcularCuotas);
@@ -149,6 +151,7 @@ const formEntrega = document.getElementById("formEntrega");
 if (formEntrega) {
   formEntrega.addEventListener("submit", function (e) {
     e.preventDefault();
+
     const nombre = document.getElementById("nombre").value;
     const email = document.getElementById("email").value;
     const direccion = document.getElementById("direccion").value;
@@ -165,6 +168,7 @@ const formPago = document.getElementById("formPago");
 if (formPago) {
   formPago.addEventListener("submit", function (e) {
     e.preventDefault();
+
     const metodoPago = document.getElementById("metodoPago").value;
     if (!metodoPago) {
       Swal.fire("Falta seleccionar un método de pago", "Por favor, elegí una opción", "warning");
@@ -195,5 +199,3 @@ if (formPago) {
     });
   });
 }
-
-
