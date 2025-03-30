@@ -1,3 +1,5 @@
+// main.js actualizado sin onclick, sin window y solo con lo enseñado en el curso
+
 let productos = [];
 let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
@@ -18,11 +20,22 @@ function renderizarProductos(productosFiltrados = productos) {
   productosFiltrados.forEach(producto => {
     const card = document.createElement("div");
     card.className = "card";
-    card.innerHTML = `
-      <h3>${producto.nombre}</h3>
-      <p>Precio: $${producto.precio}</p>
-      <button onclick="agregarAlCarrito(${producto.id})">Agregar</button>
-    `;
+
+    const nombre = document.createElement("h3");
+    nombre.textContent = producto.nombre;
+
+    const precio = document.createElement("p");
+    precio.textContent = `Precio: $${producto.precio}`;
+
+    const boton = document.createElement("button");
+    boton.textContent = "Agregar";
+    boton.addEventListener("click", function () {
+      agregarAlCarrito(producto.id);
+    });
+
+    card.appendChild(nombre);
+    card.appendChild(precio);
+    card.appendChild(boton);
     contenedor.appendChild(card);
   });
 }
@@ -36,11 +49,22 @@ function renderizarCarrito() {
 
   carrito.forEach(producto => {
     const item = document.createElement("li");
-    item.innerHTML = `
-      ${producto.nombre} - $${producto.precio} x ${producto.cantidad}
-      <button onclick="sumarUnidad(${producto.id})">+</button>
-      <button onclick="restarUnidad(${producto.id})">-</button>
-    `;
+    item.textContent = `${producto.nombre} - $${producto.precio} x ${producto.cantidad}`;
+
+    const btnSumar = document.createElement("button");
+    btnSumar.textContent = "+";
+    btnSumar.addEventListener("click", function () {
+      sumarUnidad(producto.id);
+    });
+
+    const btnRestar = document.createElement("button");
+    btnRestar.textContent = "-";
+    btnRestar.addEventListener("click", function () {
+      restarUnidad(producto.id);
+    });
+
+    item.appendChild(btnSumar);
+    item.appendChild(btnRestar);
     contenedor.appendChild(item);
     total += producto.precio * producto.cantidad;
   });
@@ -173,4 +197,5 @@ if (formPago) {
     });
   });
 }
+
 
