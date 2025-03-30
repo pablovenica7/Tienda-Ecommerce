@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forma de Pago - Tienda de Ropa</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script defer src="../js/pago.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Forma de Pago</h1>
+  </header>
+
+  <section class="checkout">
+    <form id="formPago">
+      <select id="metodoPago" required>
+        <option value="">Seleccionar método de pago</option>
+        <option value="Efectivo">Efectivo</option>
+        <option value="Tarjeta">Tarjeta</option>
+        <option value="Transferencia">Transferencia</option>
+      </select>
+      <button type="submit">Comprar</button>
+    </form>
+  </section>
+</body>
+</html>
