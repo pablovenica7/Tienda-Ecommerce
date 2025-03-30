@@ -5,7 +5,8 @@ fetch("./bd/productos.json")
   .then(res => res.json())
   .then(data => {
     productos = data;
-    if (document.getElementById("productos")) renderizarProductos();
+    const productosDOM = document.getElementById("productos");
+    if (productosDOM) renderizarProductos();
   });
 
 const guardarCarrito = () => localStorage.setItem("carrito", JSON.stringify(carrito));
@@ -44,8 +45,8 @@ function renderizarCarrito() {
     total += producto.precio * producto.cantidad;
   });
 
-  const totalSpan = document.getElementById("total");
-  if (totalSpan) totalSpan.innerText = total;
+  const totalDOM = document.getElementById("total");
+  if (totalDOM) totalDOM.innerText = total;
 }
 
 function agregarAlCarrito(id) {
@@ -59,7 +60,8 @@ function agregarAlCarrito(id) {
   }
 
   guardarCarrito();
-  if (typeof renderizarCarrito === "function") renderizarCarrito();
+  if (document.getElementById("carrito")) renderizarCarrito();
+  Swal.fire("Producto agregado", producto.nombre, "success");
 }
 
 function sumarUnidad(id) {
@@ -90,20 +92,41 @@ function calcularCuotas() {
   document.getElementById("pagoCuotas").innerText = `Pago en ${cuotas} cuotas de $${cuota}`;
 }
 
-// ---------------------- Eventos por página ----------------------
+// Página: index.html (catálogo)
+if (document.getElementById("productos")) {
+  const filtrarBtn = document.getElementById("filtrar");
+  const limpiarBtn = document.getElementById("limpiarFiltros");
 
-// 🛒 Página: carrito.html
-if (window.location.pathname.includes("carrito.html")) {
-  renderizarCarrito();
+  if (filtrarBtn && limpiarBtn) {
+    filtrarBtn.addEventListener("click", () => {
+      const nombre = document.getElementById("buscarProducto").value.toLowerCase();
+      const maxPrecio = parseFloat(document.getElementById("filtrarPrecio").value);
+      const filtrados = productos.filter(p =>
+        p.nombre.toLowerCase().includes(nombre) && (isNaN(maxPrecio) || p.precio <= maxPrecio)
+      );
+      renderizarProductos(filtrados);
+    });
 
-  document.getElementById("calcularCuotas").addEventListener("click", calcularCuotas);
+    limpiarBtn.addEventListener("click", () => {
+      document.getElementById("buscarProducto").value = "";
+      document.getElementById("filtrarPrecio").value = "";
+      renderizarProductos();
+    });
+  }
 }
 
-// 📦 Página: datos_entrega.html
-if (window.location.pathname.includes("datos_entrega.html")) {
-  document.getElementById("formEntrega").addEventListener("submit", function (e) {
-    e.preventDefault();
+// Página: carrito.html
+if (document.getElementById("carrito")) {
+  renderizarCarrito();
+  const calcularBtn = document.getElementById("calcularCuotas");
+  if (calcularBtn) calcularBtn.addEventListener("click", calcularCuotas);
+}
 
+// Página: datos_entrega.html
+const formEntrega = document.getElementById("formEntrega");
+if (formEntrega) {
+  formEntrega.addEventListener("submit", function (e) {
+    e.preventDefault();
     const nombre = document.getElementById("nombre").value;
     const email = document.getElementById("email").value;
     const direccion = document.getElementById("direccion").value;
@@ -111,18 +134,18 @@ if (window.location.pathname.includes("datos_entrega.html")) {
     const datosEntrega = { nombre, email, direccion };
     localStorage.setItem("datosEntrega", JSON.stringify(datosEntrega));
 
-    window.location.href = "forma_pago.html";
+    location.href = "forma_pago.html";
   });
 }
 
-// 💳 Página: forma_pago.html
-if (window.location.pathname.includes("forma_pago.html")) {
-  document.getElementById("formPago").addEventListener("submit", function (e) {
+// Página: forma_pago.html
+const formPago = document.getElementById("formPago");
+if (formPago) {
+  formPago.addEventListener("submit", function (e) {
     e.preventDefault();
-
     const metodoPago = document.getElementById("metodoPago").value;
     if (!metodoPago) {
-      Swal.fire("Seleccioná un método de pago", "", "warning");
+      Swal.fire("Falta seleccionar un método de pago", "Por favor, elegí una opción", "warning");
       return;
     }
 
@@ -131,7 +154,7 @@ if (window.location.pathname.includes("forma_pago.html")) {
     const total = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
 
     let resumen = `<h3>Gracias por tu compra, ${datosEntrega.nombre}!</h3>`;
-    resumen += `<p>Resumen de la compra:</p><ul>`;
+    resumen += `<p>Resumen:</p><ul>`;
     carrito.forEach(p => {
       resumen += `<li>${p.nombre} x ${p.cantidad} - $${p.precio * p.cantidad}</li>`;
     });
@@ -143,28 +166,11 @@ if (window.location.pathname.includes("forma_pago.html")) {
       title: "¡Compra exitosa!",
       html: resumen,
       icon: "success",
+      confirmButtonText: "Volver al inicio",
       confirmButtonColor: "#1d3557"
     }).then(() => {
-      window.location.href = "../index.html";
+      location.href = "../index.html";
     });
   });
 }
 
-// 🏠 Página: index.html
-if (document.getElementById("productos")) {
-  document.getElementById("filtrar").addEventListener("click", () => {
-    const nombre = document.getElementById("buscarProducto").value.toLowerCase();
-    const maxPrecio = parseFloat(document.getElementById("filtrarPrecio").value);
-    const filtrados = productos.filter(p =>
-      p.nombre.toLowerCase().includes(nombre) &&
-      (isNaN(maxPrecio) || p.precio <= maxPrecio)
-    );
-    renderizarProductos(filtrados);
-  });
-
-  document.getElementById("limpiarFiltros").addEventListener("click", () => {
-    document.getElementById("buscarProducto").value = "";
-    document.getElementById("filtrarPrecio").value = "";
-    renderizarProductos();
-  });
-}
