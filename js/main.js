@@ -89,18 +89,23 @@ const mostrarEntrega = () => {
     return;
   }
   document.getElementById("entrega").style.display = "block";
+  window.scrollTo({ top: document.getElementById("entrega").offsetTop, behavior: "smooth" });
 };
 
 const mostrarPago = (e) => {
   e.preventDefault();
   document.getElementById("entrega").style.display = "none";
   document.getElementById("pago").style.display = "block";
+  window.scrollTo({ top: document.getElementById("pago").offsetTop, behavior: "smooth" });
 };
 
 const finalizarCompra = (e) => {
   e.preventDefault();
   const metodoPago = document.getElementById("metodoPago").value;
-  if (!metodoPago) return;
+  if (!metodoPago) {
+    Swal.fire("Selecciona un método de pago", "", "info");
+    return;
+  }
   carrito = [];
   guardarCarrito();
   renderizarCarrito();
@@ -108,14 +113,18 @@ const finalizarCompra = (e) => {
   Swal.fire({
     icon: "success",
     title: "¡Gracias por tu compra!",
-    text: "Tu pedido ha sido procesado exitosamente."
+    text: "Tu pedido ha sido procesado exitosamente.",
+    confirmButtonColor: "#1d3557"
   });
 };
 
 document.getElementById("filtrar").addEventListener("click", () => {
   const nombre = document.getElementById("buscarProducto").value.toLowerCase();
   const maxPrecio = parseFloat(document.getElementById("filtrarPrecio").value);
-  const filtrados = productos.filter(p => p.nombre.toLowerCase().includes(nombre) && (isNaN(maxPrecio) || p.precio <= maxPrecio));
+  const filtrados = productos.filter(p =>
+    p.nombre.toLowerCase().includes(nombre) &&
+    (isNaN(maxPrecio) || p.precio <= maxPrecio)
+  );
   renderizarProductos(filtrados);
 });
 
@@ -131,3 +140,4 @@ document.getElementById("formEntrega").addEventListener("submit", mostrarPago);
 document.getElementById("formPago").addEventListener("submit", finalizarCompra);
 
 renderizarCarrito();
+
