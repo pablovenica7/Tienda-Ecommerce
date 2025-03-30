@@ -1,5 +1,3 @@
-// main.js actualizado sin onclick, sin window y solo con lo enseñado en el curso
-
 let productos = [];
 let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
