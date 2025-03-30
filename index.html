@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tienda de Ropa - Proyecto Final</title>
-  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script defer src="./js/main.js"></script>
 </head>
@@ -16,8 +16,8 @@
   <main class="layout">
     <section class="productos">
       <h2>Catálogo de Productos</h2>
-      <input type="text" id="buscarProducto" placeholder="Buscar producto...">
-      <input type="number" id="filtrarPrecio" placeholder="Precio máximo">
+      <input type="text" id="buscarProducto" placeholder="Buscar producto..." />
+      <input type="number" id="filtrarPrecio" placeholder="Precio máximo" />
       <button id="filtrar">Filtrar</button>
       <button id="limpiarFiltros">Limpiar Filtros</button>
       <div id="productos"></div>
@@ -35,35 +35,33 @@
       </select>
       <button id="calcularCuotas">Calcular</button>
       <p id="pagoCuotas"></p>
-      <button id="comprar">Finalizar Compra</button>
-      <p id="mensajeCompra"></p>
+      <button id="agregarDatosEntrega">Agregar al carrito</button>
     </aside>
   </main>
 
-  <section class="checkout" id="checkout" style="display: none;">
-    <h2>Checkout</h2>
-    <form id="formularioCheckout">
-      <input type="text" id="nombre" placeholder="Nombre completo" required value="Juan Perez">
-      <input type="email" id="email" placeholder="Correo electrónico" required value="juan@mail.com">
-      <input type="text" id="direccion" placeholder="Dirección de envío" required value="Av. Siempre Viva 742">
+  <section class="checkout" id="entrega" style="display: none;">
+    <h2>Datos de Entrega</h2>
+    <form id="formEntrega">
+      <input type="text" id="nombre" placeholder="Nombre completo" required value="Juan Perez" />
+      <input type="email" id="email" placeholder="Correo electrónico" required value="juan@mail.com" />
+      <input type="text" id="direccion" placeholder="Dirección de envío" required value="Av. Siempre Viva 742" />
+      <button type="submit">Continuar</button>
+    </form>
+  </section>
 
+  <section class="checkout" id="pago" style="display: none;">
+    <h2>Forma de Pago</h2>
+    <form id="formPago">
       <select id="metodoPago" required>
-        <option value="">Método de pago</option>
+        <option value="">Seleccionar método de pago</option>
+        <option value="Efectivo">Efectivo</option>
         <option value="Tarjeta">Tarjeta</option>
         <option value="Transferencia">Transferencia</option>
-        <option value="Efectivo">Efectivo</option>
       </select>
-
-      <select id="envio" required>
-        <option value="">Tipo de envío</option>
-        <option value="Retiro">Retiro en tienda</option>
-        <option value="Envio">Envío a domicilio</option>
-      </select>
-
-      <button type="submit">Confirmar Compra</button>
+      <button type="submit">Comprar</button>
     </form>
-    <div id="resumenCompra"></div>
   </section>
 </body>
 </html>
+
 
