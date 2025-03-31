@@ -4,20 +4,17 @@
     "nombre": "Camiseta",
     "precio": 5000,
     "imagen": "./assets/imagenes/remera.png",
-    "cuotas": "3 cuotas sin interés de $1.666,67"
   },
   {
     "id": 2,
     "nombre": "Pantalón",
     "precio": 8000,
     "imagen": "./assets/imagenes/pantalon.png",
-    "cuotas": "6 cuotas sin interés de $1.333,33"
   },
   {
     "id": 3,
     "nombre": "Zapatillas",
     "precio": 12000,
     "imagen": "./assets/imagenes/zapatillas.png",
-    "cuotas": "12 cuotas sin interés de $1.000,00"
   }
 ]
