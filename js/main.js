@@ -180,26 +180,6 @@ if (carritoDOM) {
   const calcularBtn = document.getElementById("calcularCuotas");
   if (calcularBtn) calcularBtn.addEventListener("click", calcularCuotas);
 
-  const vaciarBtn = document.getElementById("vaciarCarrito");
-  if (vaciarBtn) {
-    vaciarBtn.addEventListener("click", () => {
-      Swal.fire({
-        title: "¿Seguro que querés vaciar el carrito?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Sí, vaciar",
-        cancelButtonText: "Cancelar"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          carrito = [];
-          guardarCarrito();
-          renderizarCarrito();
-        }
-      });
-    });
-  }
-}
-
 const formEntrega = document.getElementById("formEntrega");
 if (formEntrega) {
   formEntrega.addEventListener("submit", function (e) {
