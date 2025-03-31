@@ -17,24 +17,49 @@ function renderizarProductos(productosFiltrados = productos) {
 
   productosFiltrados.forEach(producto => {
     const card = document.createElement("div");
-    card.className = "card";
+    card.className = "card-producto";
 
-    const nombre = document.createElement("h3");
-    nombre.textContent = producto.nombre;
+    card.innerHTML = `
+      <div class="imagen-container">
+        <img src="${producto.imagen}" alt="${producto.nombre}">
+        <div class="overlay" id="overlay-${producto.id}">
+          <div class="talles">
+            <p>TALLE</p>
+            <button class="talle">M</button>
+            <button class="talle">L</button>
+            <button class="talle">XL</button>
+          </div>
+          <button class="agregar" data-id="${producto.id}">Agregar al carrito</button>
+        </div>
+      </div>
+      <div class="info">
+        <h3>${producto.nombre}</h3>
+        <p class="precio">$${producto.precio.toLocaleString()}</p>
+        <p class="cuotas">${producto.cuotas}</p>
+        <div class="acciones">
+          <button class="comprar" data-id="${producto.id}">COMPRAR</button>
+          <button class="ver">VER</button>
+        </div>
+      </div>
+    `;
 
-    const precio = document.createElement("p");
-    precio.textContent = `Precio: $${producto.precio}`;
-
-    const boton = document.createElement("button");
-    boton.textContent = "Agregar";
-    boton.addEventListener("click", function () {
-      agregarAlCarrito(producto.id);
-    });
-
-    card.appendChild(nombre);
-    card.appendChild(precio);
-    card.appendChild(boton);
     contenedor.appendChild(card);
+  });
+
+  document.querySelectorAll(".comprar").forEach(btn => {
+    btn.addEventListener("click", e => {
+      const id = e.target.dataset.id;
+      document.getElementById(`overlay-${id}`).classList.add("mostrar");
+    });
+  });
+
+  document.querySelectorAll(".agregar").forEach(btn => {
+    btn.addEventListener("click", e => {
+      const id = parseInt(e.target.dataset.id);
+      agregarAlCarrito(id);
+      Swal.fire("¡Agregado exitosamente!", "", "success");
+      document.getElementById(`overlay-${id}`).classList.remove("mostrar");
+    });
   });
 }
 
@@ -83,14 +108,6 @@ function agregarAlCarrito(id) {
 
   guardarCarrito();
   if (document.getElementById("carrito")) renderizarCarrito();
-
-  Swal.fire({
-    title: "Producto agregado",
-    text: `${producto.nombre} - Total en carrito: ${enCarrito ? enCarrito.cantidad : 1} unidad(es)`,
-    icon: "success",
-    timer: 1500,
-    showConfirmButton: false
-  });
 }
 
 function sumarUnidad(id) {
@@ -121,7 +138,7 @@ function calcularCuotas() {
   document.getElementById("pagoCuotas").innerText = `Pago en ${cuotas} cuotas de $${cuota}`;
 }
 
-// index.html
+// index.html - Filtros
 const productosDOM = document.getElementById("productos");
 if (productosDOM) {
   const filtrarBtn = document.getElementById("filtrar");
@@ -246,4 +263,3 @@ if (formPago) {
     });
   });
 }
-
