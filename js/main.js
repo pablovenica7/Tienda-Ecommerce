@@ -38,7 +38,6 @@ function renderizarProductos(productosFiltrados = productos) {
         <p class="cuotas">${producto.cuotas}</p>
         <div class="acciones">
           <button class="comprar" data-id="${producto.id}">COMPRAR</button>
-          <button class="ver">VER</button>
         </div>
       </div>
     `;
@@ -138,7 +137,6 @@ function calcularCuotas() {
   document.getElementById("pagoCuotas").innerText = `Pago en ${cuotas} cuotas de $${cuota}`;
 }
 
-// index.html - Filtros
 const productosDOM = document.getElementById("productos");
 if (productosDOM) {
   const filtrarBtn = document.getElementById("filtrar");
@@ -162,7 +160,6 @@ if (productosDOM) {
   }
 }
 
-// carrito.html
 const carritoDOM = document.getElementById("carrito");
 if (carritoDOM) {
   renderizarCarrito();
@@ -201,7 +198,6 @@ if (carritoDOM) {
   }
 }
 
-// datos_entrega.html
 const formEntrega = document.getElementById("formEntrega");
 if (formEntrega) {
   formEntrega.addEventListener("submit", function (e) {
@@ -218,7 +214,6 @@ if (formEntrega) {
   });
 }
 
-// forma_pago.html
 const formPago = document.getElementById("formPago");
 if (formPago) {
   formPago.addEventListener("submit", function (e) {
@@ -230,14 +225,10 @@ if (formPago) {
       return;
     }
 
-    const datosEntrega = JSON.parse(localStorage.getItem("datosEntrega")) || {};
-    const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-    const total = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
+    const datosEntrega = JSON.parse(localStorage.getItem("datosEntrega")) || [];
 
+    const total = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
     const fecha = new Date().toLocaleDateString();
-    const cuotas = document.getElementById("cuotas")?.value;
-    const totalConInteres = (cuotas && cuotas > 1) ? (total * (cuotas == 3 ? 1.05 : cuotas == 6 ? 1.1 : 1.2)).toFixed(2) : total;
-    const cuotaValor = cuotas && cuotas > 1 ? (totalConInteres / cuotas).toFixed(2) : null;
 
     let resumen = `<h3>Gracias por tu compra, ${datosEntrega.nombre}!</h3>`;
     resumen += `<p>Resumen:</p><ul>`;
@@ -246,9 +237,6 @@ if (formPago) {
     });
     resumen += `</ul><p>Total: $${total}</p><p>Método de pago: ${metodoPago}</p>`;
     resumen += `<p>Fecha de compra: ${fecha}</p>`;
-    if (cuotaValor) {
-      resumen += `<p>Pago en ${cuotas} cuotas de $${cuotaValor}</p>`;
-    }
 
     localStorage.removeItem("carrito");
 
