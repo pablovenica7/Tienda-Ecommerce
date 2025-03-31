@@ -70,8 +70,7 @@ function renderizarProductos(productosFiltrados = productos) {
   document.querySelectorAll(".agregar").forEach(btn => {
     btn.addEventListener("click", e => {
       const id = parseInt(e.target.dataset.id);
-      const talleSeleccionado = document
-        .querySelector(`#overlay-${id} .talle.seleccionado`);
+      const talleSeleccionado = document.querySelector(`#overlay-${id} .talle.seleccionado`);
 
       if (!talleSeleccionado) {
         Swal.fire("Seleccioná un talle antes de continuar", "", "warning");
@@ -80,7 +79,6 @@ function renderizarProductos(productosFiltrados = productos) {
 
       const talle = talleSeleccionado.textContent;
       agregarAlCarrito(id, talle);
-
       document.getElementById(`overlay-${id}`).classList.remove("mostrar");
     });
   });
@@ -166,35 +164,32 @@ const carritoDOM = document.getElementById("carrito");
 if (carritoDOM) {
   renderizarCarrito();
 
-  if (carrito.length === 0) {
-    Swal.fire({
-      icon: "warning",
-      title: "Tu carrito está vacío",
-      text: "Agregá productos antes de continuar con la compra",
-      confirmButtonText: "Volver al catálogo"
-    }).then(() => {
-      location.href = "../index.html";
-    });
-  }
-
   const calcularBtn = document.getElementById("calcularCuotas");
   if (calcularBtn) calcularBtn.addEventListener("click", calcularCuotas);
 
   const vaciarBtn = document.getElementById("vaciarCarrito");
   if (vaciarBtn) {
-  vaciarBtn.addEventListener("click", () => {
-    Swal.fire({
-      title: "¿Seguro que querés vaciar el carrito?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Sí, vaciar",
-      cancelButtonText: "Cancelar"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        carrito = [];
-        guardarCarrito();
-        renderizarCarrito();
+    vaciarBtn.addEventListener("click", () => {
+      Swal.fire({
+        title: "¿Seguro que querés vaciar el carrito?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sí, vaciar",
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          carrito = [];
+          guardarCarrito();
+          renderizarCarrito();
+        }
+      });
+    });
+  }
 
+  const continuarBtn = document.getElementById("continuarCompra");
+  if (continuarBtn) {
+    continuarBtn.addEventListener("click", () => {
+      if (carrito.length === 0) {
         Swal.fire({
           icon: "warning",
           title: "Tu carrito está vacío",
@@ -203,11 +198,12 @@ if (carritoDOM) {
         }).then(() => {
           location.href = "../index.html";
         });
+      } else {
+        location.href = "datos_entrega.html";
       }
     });
-  });
+  }
 }
-
 
 const formEntrega = document.getElementById("formEntrega");
 if (formEntrega) {
@@ -262,3 +258,4 @@ if (formPago) {
     });
   });
 }
+
