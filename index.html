@@ -5,17 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tienda de Ropa - Catálogo</title>
   <link rel="stylesheet" href="./css/style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script defer src="./js/main.js"></script>
 </head>
 <body>
   <header>
-    <h1>Catálogo de Productos</h1>
-    <button class="btn-principal" onclick="irAlCarrito()">Ir al carrito</button>
+    <h1>Tienda de Ropa</h1>
   </header>
 
-  <main id="productos" class="productos-container"></main>
+  <main class="layout">
+    <section class="productos">
+      <h2>Catálogo de Productos</h2>
+      <input type="text" id="buscarProducto" placeholder="Buscar producto..." />
+      <input type="number" id="filtrarPrecio" placeholder="Precio máximo" />
+      <button id="filtrar">Filtrar</button>
+      <button id="limpiarFiltros">Limpiar Filtros</button>
+      <div id="productos"></div>
+    </section>
 
+    <aside class="carrito">
+      <h2>¿Listo para comprar?</h2>
+      <p>Revisá tu carrito y seguí con la compra.</p>
+      <a href="./pages/carrito.html" class="btn-principal">Ir al carrito</a>
+    </aside>
+  </main>
 </body>
 </html>
-
