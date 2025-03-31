@@ -182,23 +182,32 @@ if (carritoDOM) {
 
   const vaciarBtn = document.getElementById("vaciarCarrito");
   if (vaciarBtn) {
-    vaciarBtn.addEventListener("click", () => {
-      Swal.fire({
-        title: "¿Seguro que querés vaciar el carrito?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Sí, vaciar",
-        cancelButtonText: "Cancelar"
-      }).then((result) => {
-        if (result.isConfirmed) {
-          carrito = [];
-          guardarCarrito();
-          renderizarCarrito();
-        }
-      });
+  vaciarBtn.addEventListener("click", () => {
+    Swal.fire({
+      title: "¿Seguro que querés vaciar el carrito?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, vaciar",
+      cancelButtonText: "Cancelar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        carrito = [];
+        guardarCarrito();
+        renderizarCarrito();
+
+        Swal.fire({
+          icon: "warning",
+          title: "Tu carrito está vacío",
+          text: "Agregá productos antes de continuar con la compra",
+          confirmButtonText: "Volver al catálogo"
+        }).then(() => {
+          location.href = "../index.html";
+        });
+      }
     });
-  }
+  });
 }
+
 
 const formEntrega = document.getElementById("formEntrega");
 if (formEntrega) {
