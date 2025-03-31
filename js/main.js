@@ -332,11 +332,12 @@ document.addEventListener("DOMContentLoaded", () => {
         html: resumen,
         icon: "success",
         confirmButtonText: "Volver al inicio",
-        confirmButtonColor: "#1d3557"
-      }).then(() => {
-        location.href = "../index.html";
+        confirmButtonColor: "#1d3557",
+        allowOutsideClick: false,
+        allowEscapeKey: false
+      }).then((result) => {
+        if (result.isConfirmed) {
+          location.href = "../index.html";
+        }
       });
-    });
-  }
-});
 
