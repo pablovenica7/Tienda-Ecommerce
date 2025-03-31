@@ -1,7 +1,7 @@
 let productos = [];
 let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
-fetch("./bd/productos.json")
+fetch("../bd/productos.json")
   .then(res => res.json())
   .then(data => {
     productos = data;
@@ -86,6 +86,39 @@ function renderizarProductos(productosFiltrados = productos) {
   });
 }
 
+// Filtros
+const inputBuscar = document.getElementById("buscarProducto");
+const inputPrecio = document.getElementById("filtrarPrecio");
+const btnFiltrar = document.getElementById("filtrar");
+const btnLimpiar = document.getElementById("limpiarFiltros");
+
+if (btnFiltrar) {
+  btnFiltrar.addEventListener("click", () => {
+    const texto = inputBuscar.value.toLowerCase().trim();
+    const precioMax = parseFloat(inputPrecio.value);
+
+    let filtrados = productos;
+
+    if (texto) {
+      filtrados = filtrados.filter(p => p.nombre.toLowerCase().includes(texto));
+    }
+
+    if (!isNaN(precioMax)) {
+      filtrados = filtrados.filter(p => p.precio <= precioMax);
+    }
+
+    renderizarProductos(filtrados);
+  });
+}
+
+if (btnLimpiar) {
+  btnLimpiar.addEventListener("click", () => {
+    inputBuscar.value = "";
+    inputPrecio.value = "";
+    renderizarProductos();
+  });
+}
+
 function agregarAlCarrito(id, talle) {
   const producto = productos.find(p => p.id === id);
   const nombreConTalle = `${producto.nombre} ${talle}`;
@@ -114,15 +147,11 @@ function renderizarCarrito() {
 
     const btnSumar = document.createElement("button");
     btnSumar.textContent = "+";
-    btnSumar.addEventListener("click", function () {
-      sumarUnidad(producto.nombre);
-    });
+    btnSumar.addEventListener("click", () => sumarUnidad(producto.nombre));
 
     const btnRestar = document.createElement("button");
     btnRestar.textContent = "-";
-    btnRestar.addEventListener("click", function () {
-      restarUnidad(producto.nombre);
-    });
+    btnRestar.addEventListener("click", () => restarUnidad(producto.nombre));
 
     item.appendChild(btnSumar);
     item.appendChild(btnRestar);
@@ -186,14 +215,22 @@ if (formEntrega) {
   formEntrega.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const nombre = document.getElementById("nombre").value;
-    const email = document.getElementById("email").value;
-    const direccion = document.getElementById("direccion").value;
+    const datosEntrega = {
+      nombre: document.getElementById("nombre").value,
+      apellido: document.getElementById("apellido")?.value || "",
+      telefono: document.getElementById("telefono")?.value || "",
+      codigoPostal: document.getElementById("codigoPostal")?.value || "",
+      provincia: document.getElementById("provincia")?.value || "",
+      calle: document.getElementById("calle")?.value || "",
+      numero: document.getElementById("numero")?.value || "",
+      departamento: document.getElementById("departamento")?.value || "",
+      barrio: document.getElementById("barrio")?.value || "",
+      ciudad: document.getElementById("ciudad")?.value || "",
+      dni: document.getElementById("dni").value
+    };
 
-    const datosEntrega = { nombre, email, direccion };
     localStorage.setItem("datosEntrega", JSON.stringify(datosEntrega));
-
-    location.href = "../forma_pago.html";
+    location.href = "../pages/forma_pago.html";
   });
 }
 
@@ -201,10 +238,13 @@ const formPago = document.getElementById("formPago");
 if (formPago) {
   const metodoPago = document.getElementById("metodoPago");
   const datosTransferencia = document.getElementById("datosTransferencia");
+  const datosTarjeta = document.getElementById("datosTarjeta");
 
-  if (metodoPago && datosTransferencia) {
+  if (metodoPago) {
     metodoPago.addEventListener("change", () => {
-      datosTransferencia.style.display = metodoPago.value === "Transferencia" ? "block" : "none";
+      const valor = metodoPago.value;
+      if (datosTransferencia) datosTransferencia.style.display = valor === "Transferencia" ? "block" : "none";
+      if (datosTarjeta) datosTarjeta.style.display = valor === "Tarjeta" ? "block" : "none";
     });
   }
 
@@ -218,7 +258,6 @@ if (formPago) {
     }
 
     const datosEntrega = JSON.parse(localStorage.getItem("datosEntrega")) || [];
-
     const total = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
     const fecha = new Date().toLocaleDateString();
 
@@ -243,5 +282,3 @@ if (formPago) {
     });
   });
 }
-
-
