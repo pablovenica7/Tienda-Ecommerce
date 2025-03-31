@@ -252,6 +252,12 @@ select {
   background-size: 1rem;
 }
 
+.talle.seleccionado {
+  background-color: black;
+  color: white;
+}
+
+
 /* Responsive */
 @media (max-width: 768px) {
   .layout {
