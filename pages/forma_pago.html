@@ -21,8 +21,28 @@
         <option value="Tarjeta">Tarjeta</option>
         <option value="Transferencia">Transferencia</option>
       </select>
+
+      <div id="datosTransferencia" style="display: none; margin-top: 1rem;">
+        <h3>Datos para transferencia</h3>
+        <p><strong>Alias:</strong> tienda.ropa.digital</p>
+        <p><strong>CBU:</strong> 1234567890123456789012</p>
+        <p><strong>CVU:</strong> 0000003100000000001234</p>
+        <p><strong>Titular:</strong> Valentina Rivas</p>
+      </div>
+
       <button type="submit">Comprar</button>
     </form>
   </section>
+
+  <script>
+    const metodoPago = document.getElementById("metodoPago");
+    const datosTransferencia = document.getElementById("datosTransferencia");
+
+    if (metodoPago) {
+      metodoPago.addEventListener("change", () => {
+        datosTransferencia.style.display = metodoPago.value === "Transferencia" ? "block" : "none";
+      });
+    }
+  </script>
 </body>
 </html>
