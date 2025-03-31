@@ -33,16 +33,6 @@
       <button type="submit">Comprar</button>
     </form>
   </section>
-
-  <script>
-    const metodoPago = document.getElementById("metodoPago");
-    const datosTransferencia = document.getElementById("datosTransferencia");
-
-    if (metodoPago) {
-      metodoPago.addEventListener("change", () => {
-        datosTransferencia.style.display = metodoPago.value === "Transferencia" ? "block" : "none";
-      });
-    }
-  </script>
 </body>
 </html>
+
