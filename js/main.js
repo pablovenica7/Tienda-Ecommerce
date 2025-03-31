@@ -282,3 +282,61 @@ if (formPago) {
     });
   });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const formPago = document.getElementById("formPago");
+  const metodoPago = document.getElementById("metodoPago");
+  const datosTransferencia = document.getElementById("datosTransferencia");
+  const datosTarjeta = document.getElementById("datosTarjeta");
+
+  if (metodoPago) {
+    metodoPago.addEventListener("change", () => {
+      const valor = metodoPago.value;
+      if (datosTransferencia) datosTransferencia.style.display = valor === "Transferencia" ? "block" : "none";
+      if (datosTarjeta) datosTarjeta.style.display = valor === "Tarjeta" ? "block" : "none";
+
+      document.querySelectorAll("#datosTarjeta input").forEach(input => {
+        input.required = valor === "Tarjeta";
+      });
+    });
+  }
+
+  if (formPago) {
+    formPago.addEventListener("submit", function (e) {
+      e.preventDefault();
+      console.log("ENVIANDO FORMULARIO", metodoPago.value);
+
+      const metodoPagoValue = metodoPago.value;
+      if (!metodoPagoValue) {
+        Swal.fire("Falta seleccionar un método de pago", "Por favor, elegí una opción", "warning");
+        return;
+      }
+
+      const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+      const datosEntrega = JSON.parse(localStorage.getItem("datosEntrega")) || {};
+      const total = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
+      const fecha = new Date().toLocaleDateString();
+
+      let resumen = `<h3>Gracias por tu compra, ${datosEntrega.nombre}!</h3>`;
+      resumen += `<p>Resumen:</p><ul>`;
+      carrito.forEach(p => {
+        resumen += `<li>${p.nombre} x ${p.cantidad} - $${p.precio * p.cantidad}</li>`;
+      });
+      resumen += `</ul><p>Total: $${total}</p><p>Método de pago: ${metodoPagoValue}</p>`;
+      resumen += `<p>Fecha de compra: ${fecha}</p>`;
+
+      localStorage.removeItem("carrito");
+
+      Swal.fire({
+        title: "¡Compra exitosa!",
+        html: resumen,
+        icon: "success",
+        confirmButtonText: "Volver al inicio",
+        confirmButtonColor: "#1d3557"
+      }).then(() => {
+        location.href = "../index.html";
+      });
+    });
+  }
+});
+
