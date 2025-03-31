@@ -43,7 +43,6 @@ function renderizarProductos(productosFiltrados = productos) {
       <div class="info">
         <h3>${producto.nombre}</h3>
         <p class="precio">$${producto.precio.toLocaleString()}</p>
-        <p class="cuotas">${producto.cuotas}</p>
         <div class="acciones">
           <button class="comprar" data-id="${producto.id}">COMPRAR</button>
         </div>
@@ -82,7 +81,6 @@ function renderizarProductos(productosFiltrados = productos) {
       const talle = talleSeleccionado.textContent;
       agregarAlCarrito(id, talle);
 
-      Swal.fire("AGREGADO EXITOSAMENTE", "", "success");
       document.getElementById(`overlay-${id}`).classList.remove("mostrar");
     });
   });
