@@ -253,3 +253,36 @@ if (formPago) {
     });
   });
 }
+
+const btnFiltrar = document.getElementById("filtrar");
+const btnLimpiar = document.getElementById("limpiarFiltros");
+
+if (btnFiltrar) {
+  btnFiltrar.addEventListener("click", () => {
+    const texto = document.getElementById("buscarProducto").value.toLowerCase();
+    const precioMax = parseFloat(document.getElementById("filtrarPrecio").value);
+
+    let filtrados = productos;
+
+    if (texto) {
+      filtrados = filtrados.filter(p =>
+        p.nombre.toLowerCase().includes(texto)
+      );
+    }
+
+    if (!isNaN(precioMax)) {
+      filtrados = filtrados.filter(p => p.precio <= precioMax);
+    }
+
+    renderizarProductos(filtrados);
+  });
+}
+
+if (btnLimpiar) {
+  btnLimpiar.addEventListener("click", () => {
+    document.getElementById("buscarProducto").value = "";
+    document.getElementById("filtrarPrecio").value = "";
+    renderizarProductos(); // muestra todos los productos
+  });
+}
+
