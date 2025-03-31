@@ -212,7 +212,7 @@ if (formEntrega) {
     const datosEntrega = { nombre, email, direccion };
     localStorage.setItem("datosEntrega", JSON.stringify(datosEntrega));
 
-    location.href = "forma_pago.html";
+    location.href = "./forma_pago.html";
   });
 }
 
