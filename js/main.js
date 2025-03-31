@@ -240,13 +240,20 @@ if (formPago) {
   const datosTransferencia = document.getElementById("datosTransferencia");
   const datosTarjeta = document.getElementById("datosTarjeta");
 
-  if (metodoPago) {
-    metodoPago.addEventListener("change", () => {
-      const valor = metodoPago.value;
-      if (datosTransferencia) datosTransferencia.style.display = valor === "Transferencia" ? "block" : "none";
-      if (datosTarjeta) datosTarjeta.style.display = valor === "Tarjeta" ? "block" : "none";
+if (metodoPago) {
+  metodoPago.addEventListener("change", () => {
+    const valor = metodoPago.value;
+
+    // Mostrar u ocultar secciones
+    if (datosTransferencia) datosTransferencia.style.display = valor === "Transferencia" ? "block" : "none";
+    if (datosTarjeta) datosTarjeta.style.display = valor === "Tarjeta" ? "block" : "none";
+
+    // Activar required solo si es tarjeta
+    document.querySelectorAll("#datosTarjeta input").forEach(input => {
+      input.required = valor === "Tarjeta";
     });
-  }
+  });
+}
 
   formPago.addEventListener("submit", function (e) {
     e.preventDefault();
