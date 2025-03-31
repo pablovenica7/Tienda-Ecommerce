@@ -253,3 +253,17 @@ if (formPago) {
     });
   });
 }
+
+const metodoPagoSelect = document.getElementById("metodoPago");
+const formTarjeta = document.getElementById("formTarjeta");
+
+if (metodoPagoSelect && formTarjeta) {
+  metodoPagoSelect.addEventListener("change", () => {
+    if (metodoPagoSelect.value === "tarjeta") {
+      formTarjeta.style.display = "block";
+    } else {
+      formTarjeta.style.display = "none";
+    }
+  });
+}
+
