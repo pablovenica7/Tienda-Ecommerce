@@ -1,31 +1,45 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carrito - Tienda de Ropa</title>
-  <link rel="stylesheet" href="../css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Carrito de Compras</title>
+  <link rel="stylesheet" href="../css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script defer src="../js/main.js"></script>
 </head>
 <body>
   <header>
-    <h1>Carrito de Compras</h1>
+    <h1>Tu Carrito</h1>
   </header>
 
-  <main class="layout">
-    <section class="carrito">
+  <main>
+    <section class="carrito-container">
       <ul id="carrito"></ul>
       <p>Total: $<span id="total">0</span></p>
-      <select id="cuotas">
-        <option value="1">1 cuota (sin interés)</option>
-        <option value="3">3 cuotas</option>
-        <option value="6">6 cuotas</option>
-        <option value="12">12 cuotas</option>
-      </select>
-      <button id="calcularCuotas">Calcular</button>
-      <p id="pagoCuotas"></p>
-      <a href="datos_entrega.html" class="btn-principal">Continuar</a>
+
+      <div class="cuotas-container">
+        <label for="cuotas">Elegí cuotas:</label>
+        <select id="cuotas">
+          <option value="1">1 cuota</option>
+          <option value="3">3 cuotas</option>
+          <option value="6">6 cuotas</option>
+          <option value="12">12 cuotas</option>
+        </select>
+
+        <small class="aclaracion-interes">
+          * Intereses: 3 cuotas (+5%), 6 cuotas (+10%), 12 cuotas (+20%)
+        </small>
+
+        <button id="calcularCuotas">Calcular cuotas</button>
+        <p id="pagoCuotas"></p>
+      </div>
+
+      <div class="acciones">
+        <a href="../pages/datos_entrega.html">
+          <button>Continuar</button>
+        </a>
+      </div>
     </section>
   </main>
 </body>
