@@ -243,8 +243,13 @@ if (formPago) {
   if (metodoPago) {
     metodoPago.addEventListener("change", () => {
       const valor = metodoPago.value;
+
       if (datosTransferencia) datosTransferencia.style.display = valor === "Transferencia" ? "block" : "none";
       if (datosTarjeta) datosTarjeta.style.display = valor === "Tarjeta" ? "block" : "none";
+
+      document.querySelectorAll("#datosTarjeta input").forEach(input => {
+        input.required = valor === "Tarjeta";
+      });
     });
   }
 
@@ -257,7 +262,8 @@ if (formPago) {
       return;
     }
 
-    const datosEntrega = JSON.parse(localStorage.getItem("datosEntrega")) || [];
+    const datosEntrega = JSON.parse(localStorage.getItem("datosEntrega")) || {};
+    const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
     const total = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
     const fecha = new Date().toLocaleDateString();
 
@@ -276,9 +282,13 @@ if (formPago) {
       html: resumen,
       icon: "success",
       confirmButtonText: "Volver al inicio",
-      confirmButtonColor: "#1d3557"
-    }).then(() => {
-      location.href = "../index.html";
+      confirmButtonColor: "#1d3557",
+      allowOutsideClick: false,
+      allowEscapeKey: false
+    }).then(result => {
+      if (result.isConfirmed) {
+        location.href = "../index.html";
+      }
     });
   });
 }
