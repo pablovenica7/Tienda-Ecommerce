@@ -322,3 +322,11 @@ form button[type="submit"] {
   padding: 14px;
   border-radius: 10px;
 }
+
+.aclaracion-interes {
+  font-size: 0.85rem;
+  color: #555;
+  margin-top: 0.3rem;
+  display: block;
+}
+
