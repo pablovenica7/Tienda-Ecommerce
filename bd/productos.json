@@ -1,7 +1,23 @@
 [
-  { "id": 1, "nombre": "Camiseta", "precio": 5000 },
-  { "id": 2, "nombre": "Pantalón", "precio": 8000 },
-  { "id": 3, "nombre": "Zapatillas", "precio": 12000 },
-  { "id": 4, "nombre": "Gorra", "precio": 2500 },
-  { "id": 5, "nombre": "Buzo", "precio": 10000 }
+  {
+    "id": 1,
+    "nombre": "Camiseta",
+    "precio": 5000,
+    "imagen": "https://via.placeholder.com/300x400.png?text=Camiseta",
+    "cuotas": "3 cuotas sin interés de $1.666,67"
+  },
+  {
+    "id": 2,
+    "nombre": "Pantalón",
+    "precio": 8000,
+    "imagen": "https://via.placeholder.com/300x400.png?text=Pantalon",
+    "cuotas": "6 cuotas sin interés de $1.333,33"
+  },
+  {
+    "id": 3,
+    "nombre": "Zapatillas",
+    "precio": 12000,
+    "imagen": "https://via.placeholder.com/300x400.png?text=Zapatillas",
+    "cuotas": "12 cuotas sin interés de $1.000,00"
+  }
 ]
