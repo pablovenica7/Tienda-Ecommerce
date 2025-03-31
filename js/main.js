@@ -83,7 +83,14 @@ function agregarAlCarrito(id) {
 
   guardarCarrito();
   if (document.getElementById("carrito")) renderizarCarrito();
-  Swal.fire("Producto agregado", producto.nombre, "success");
+
+  Swal.fire({
+    title: "Producto agregado",
+    text: `${producto.nombre} - Total en carrito: ${enCarrito ? enCarrito.cantidad : 1} unidad(es)`,
+    icon: "success",
+    timer: 1500,
+    showConfirmButton: false
+  });
 }
 
 function sumarUnidad(id) {
@@ -114,7 +121,7 @@ function calcularCuotas() {
   document.getElementById("pagoCuotas").innerText = `Pago en ${cuotas} cuotas de $${cuota}`;
 }
 
-// Página: index.html (catálogo)
+// index.html
 const productosDOM = document.getElementById("productos");
 if (productosDOM) {
   const filtrarBtn = document.getElementById("filtrar");
@@ -138,15 +145,46 @@ if (productosDOM) {
   }
 }
 
-// Página: carrito.html
+// carrito.html
 const carritoDOM = document.getElementById("carrito");
 if (carritoDOM) {
   renderizarCarrito();
+
+  if (carrito.length === 0) {
+    Swal.fire({
+      icon: "warning",
+      title: "Tu carrito está vacío",
+      text: "Agregá productos antes de continuar con la compra",
+      confirmButtonText: "Volver al catálogo"
+    }).then(() => {
+      location.href = "../index.html";
+    });
+  }
+
   const calcularBtn = document.getElementById("calcularCuotas");
   if (calcularBtn) calcularBtn.addEventListener("click", calcularCuotas);
+
+  const vaciarBtn = document.getElementById("vaciarCarrito");
+  if (vaciarBtn) {
+    vaciarBtn.addEventListener("click", () => {
+      Swal.fire({
+        title: "¿Seguro que querés vaciar el carrito?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sí, vaciar",
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          carrito = [];
+          guardarCarrito();
+          renderizarCarrito();
+        }
+      });
+    });
+  }
 }
 
-// Página: datos_entrega.html
+// datos_entrega.html
 const formEntrega = document.getElementById("formEntrega");
 if (formEntrega) {
   formEntrega.addEventListener("submit", function (e) {
@@ -163,7 +201,7 @@ if (formEntrega) {
   });
 }
 
-// Página: forma_pago.html
+// forma_pago.html
 const formPago = document.getElementById("formPago");
 if (formPago) {
   formPago.addEventListener("submit", function (e) {
@@ -179,12 +217,21 @@ if (formPago) {
     const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
     const total = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
 
+    const fecha = new Date().toLocaleDateString();
+    const cuotas = document.getElementById("cuotas")?.value;
+    const totalConInteres = (cuotas && cuotas > 1) ? (total * (cuotas == 3 ? 1.05 : cuotas == 6 ? 1.1 : 1.2)).toFixed(2) : total;
+    const cuotaValor = cuotas && cuotas > 1 ? (totalConInteres / cuotas).toFixed(2) : null;
+
     let resumen = `<h3>Gracias por tu compra, ${datosEntrega.nombre}!</h3>`;
     resumen += `<p>Resumen:</p><ul>`;
     carrito.forEach(p => {
       resumen += `<li>${p.nombre} x ${p.cantidad} - $${p.precio * p.cantidad}</li>`;
     });
     resumen += `</ul><p>Total: $${total}</p><p>Método de pago: ${metodoPago}</p>`;
+    resumen += `<p>Fecha de compra: ${fecha}</p>`;
+    if (cuotaValor) {
+      resumen += `<p>Pago en ${cuotas} cuotas de $${cuotaValor}</p>`;
+    }
 
     localStorage.removeItem("carrito");
 
@@ -199,3 +246,4 @@ if (formPago) {
     });
   });
 }
+
