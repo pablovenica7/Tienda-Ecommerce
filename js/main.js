@@ -164,6 +164,18 @@ const carritoDOM = document.getElementById("carrito");
 if (carritoDOM) {
   renderizarCarrito();
 
+  if (carrito.length === 0) {
+    Swal.fire({
+      icon: "warning",
+      title: "Tu carrito está vacío",
+      text: "Agregá productos antes de continuar con la compra",
+      confirmButtonText: "Volver al catálogo"
+    }).then(() => {
+      location.href = "../index.html";
+    });
+    return;
+  }
+
   const calcularBtn = document.getElementById("calcularCuotas");
   if (calcularBtn) calcularBtn.addEventListener("click", calcularCuotas);
 
@@ -204,6 +216,22 @@ if (carritoDOM) {
     });
   }
 }
+
+// Función global para usar en index.html
+function irAlCarrito() {
+  const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  if (carrito.length === 0) {
+    Swal.fire({
+      icon: "warning",
+      title: "Tu carrito está vacío",
+      text: "Agregá productos antes de continuar con la compra",
+      confirmButtonText: "Seguir comprando"
+    });
+  } else {
+    location.href = "./pages/carrito.html";
+  }
+}
+window.irAlCarrito = irAlCarrito;
 
 const formEntrega = document.getElementById("formEntrega");
 if (formEntrega) {
@@ -258,4 +286,3 @@ if (formPago) {
     });
   });
 }
-
