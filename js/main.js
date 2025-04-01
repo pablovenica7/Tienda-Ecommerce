@@ -1,22 +1,18 @@
-const productosDOM = document.getElementById("productos");
+let productos = [];
+let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
-if (productosDOM) {
-  fetch("./bd/productos.json")
-    .then(res => res.json())
-    .then(data => {
-      productos = data;
-      renderizarProductos();
-    })
-    .catch(() => {
-      Swal.fire("Error al cargar productos", "", "error");
-    });
-}
+fetch("bd/productos.json")
+  .then(res => res.json())
+  .then(data => {
+    productos = data;
+    const productosDOM = document.getElementById("productos");
+    if (productosDOM) renderizarProductos();
+  });
 
 const guardarCarrito = () => localStorage.setItem("carrito", JSON.stringify(carrito));
 
 function renderizarProductos(productosFiltrados = productos) {
   const contenedor = document.getElementById("productos");
-  if (!contenedor) return;
   contenedor.innerHTML = "";
 
   productosFiltrados.forEach(producto => {
@@ -24,9 +20,6 @@ function renderizarProductos(productosFiltrados = productos) {
     card.className = "card-producto";
 
     const esZapatilla = producto.nombre.toLowerCase().includes("zapatilla");
-    const talles = esZapatilla
-      ? ["40", "42", "44"]
-      : ["M", "L", "XL"];
 
     card.innerHTML = `
       <div class="imagen-container">
@@ -34,7 +27,15 @@ function renderizarProductos(productosFiltrados = productos) {
         <div class="overlay" id="overlay-${producto.id}">
           <div class="talles" data-id="${producto.id}">
             <p>TALLE</p>
-            ${talles.map(t => `<button class="talle">${t}</button>`).join("")}
+            ${
+              esZapatilla
+                ? `<button class="talle">40</button>
+                   <button class="talle">42</button>
+                   <button class="talle">44</button>`
+                : `<button class="talle">M</button>
+                   <button class="talle">L</button>
+                   <button class="talle">XL</button>`
+            }
           </div>
           <button class="agregar" data-id="${producto.id}">Agregar al carrito</button>
         </div>
@@ -51,10 +52,6 @@ function renderizarProductos(productosFiltrados = productos) {
     contenedor.appendChild(card);
   });
 
-  inicializarEventosProducto();
-}
-
-function inicializarEventosProducto() {
   document.querySelectorAll(".comprar").forEach(btn => {
     btn.addEventListener("click", e => {
       const id = e.target.dataset.id;
@@ -73,35 +70,53 @@ function inicializarEventosProducto() {
   document.querySelectorAll(".agregar").forEach(btn => {
     btn.addEventListener("click", e => {
       const id = parseInt(e.target.dataset.id);
-      const talleSeleccionado = document.querySelector(`#overlay-${id} .talle.seleccionado`);
+      const talleSeleccionado = document
+        .querySelector(`#overlay-${id} .talle.seleccionado`);
+
       if (!talleSeleccionado) {
         Swal.fire("Seleccioná un talle antes de continuar", "", "warning");
         return;
       }
+
       const talle = talleSeleccionado.textContent;
       agregarAlCarrito(id, talle);
+
       document.getElementById(`overlay-${id}`).classList.remove("mostrar");
     });
   });
 }
 
+// Filtros
 const inputBuscar = document.getElementById("buscarProducto");
 const inputPrecio = document.getElementById("filtrarPrecio");
 const btnFiltrar = document.getElementById("filtrar");
 const btnLimpiar = document.getElementById("limpiarFiltros");
 
-if (btnFiltrar) btnFiltrar.addEventListener("click", aplicarFiltros);
-if (btnLimpiar) btnLimpiar.addEventListener("click", () => renderizarProductos());
+if (btnFiltrar) {
+  btnFiltrar.addEventListener("click", () => {
+    const texto = inputBuscar.value.toLowerCase().trim();
+    const precioMax = parseFloat(inputPrecio.value);
 
-function aplicarFiltros() {
-  const texto = inputBuscar.value.toLowerCase().trim();
-  const precioMax = parseFloat(inputPrecio.value);
-  let filtrados = productos;
+    let filtrados = productos;
 
-  if (texto) filtrados = filtrados.filter(p => p.nombre.toLowerCase().includes(texto));
-  if (!isNaN(precioMax)) filtrados = filtrados.filter(p => p.precio <= precioMax);
+    if (texto) {
+      filtrados = filtrados.filter(p => p.nombre.toLowerCase().includes(texto));
+    }
 
-  renderizarProductos(filtrados);
+    if (!isNaN(precioMax)) {
+      filtrados = filtrados.filter(p => p.precio <= precioMax);
+    }
+
+    renderizarProductos(filtrados);
+  });
+}
+
+if (btnLimpiar) {
+  btnLimpiar.addEventListener("click", () => {
+    inputBuscar.value = "";
+    inputPrecio.value = "";
+    renderizarProductos();
+  });
 }
 
 function agregarAlCarrito(id, talle) {
@@ -141,7 +156,6 @@ function renderizarCarrito() {
     item.appendChild(btnSumar);
     item.appendChild(btnRestar);
     contenedor.appendChild(item);
-
     total += producto.precio * producto.cantidad;
   });
 
@@ -180,14 +194,18 @@ function calcularCuotas() {
 const carritoDOM = document.getElementById("carrito");
 if (carritoDOM) {
   renderizarCarrito();
+
   if (carrito.length === 0) {
     Swal.fire({
       icon: "warning",
       title: "Tu carrito está vacío",
       text: "Agregá productos antes de continuar con la compra",
       confirmButtonText: "Volver al catálogo"
-    }).then(() => location.href = "../index.html");
+    }).then(() => {
+      location.href = "../index.html";
+    });
   }
+
   const calcularBtn = document.getElementById("calcularCuotas");
   if (calcularBtn) calcularBtn.addEventListener("click", calcularCuotas);
 }
@@ -196,6 +214,7 @@ const formEntrega = document.getElementById("formEntrega");
 if (formEntrega) {
   formEntrega.addEventListener("submit", function (e) {
     e.preventDefault();
+
     const datosEntrega = {
       nombre: document.getElementById("nombre").value,
       apellido: document.getElementById("apellido")?.value || "",
@@ -209,6 +228,7 @@ if (formEntrega) {
       ciudad: document.getElementById("ciudad")?.value || "",
       dni: document.getElementById("dni").value
     };
+
     localStorage.setItem("datosEntrega", JSON.stringify(datosEntrega));
     location.href = "../pages/forma_pago.html";
   });
@@ -220,21 +240,28 @@ if (formPago) {
   const datosTransferencia = document.getElementById("datosTransferencia");
   const datosTarjeta = document.getElementById("datosTarjeta");
 
-  metodoPago.addEventListener("change", () => {
-    const valor = metodoPago.value;
-    if (datosTransferencia) datosTransferencia.style.display = valor === "Transferencia" ? "block" : "none";
-    if (datosTarjeta) datosTarjeta.style.display = valor === "Tarjeta" ? "block" : "none";
-    document.querySelectorAll("#datosTarjeta input")
-      .forEach(input => input.required = valor === "Tarjeta");
-  });
+  if (metodoPago) {
+    metodoPago.addEventListener("change", () => {
+      const valor = metodoPago.value;
+
+      if (datosTransferencia) datosTransferencia.style.display = valor === "Transferencia" ? "block" : "none";
+      if (datosTarjeta) datosTarjeta.style.display = valor === "Tarjeta" ? "block" : "none";
+
+      document.querySelectorAll("#datosTarjeta input").forEach(input => {
+        input.required = valor === "Tarjeta";
+      });
+    });
+  }
 
   formPago.addEventListener("submit", function (e) {
     e.preventDefault();
+
     const metodoPagoValue = metodoPago.value;
     if (!metodoPagoValue) {
       Swal.fire("Falta seleccionar un método de pago", "Por favor, elegí una opción", "warning");
       return;
     }
+
     const datosEntrega = JSON.parse(localStorage.getItem("datosEntrega")) || {};
     const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
     const total = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
@@ -265,4 +292,3 @@ if (formPago) {
     });
   });
 }
-
