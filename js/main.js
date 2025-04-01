@@ -1,15 +1,16 @@
-let productos = [];
-let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+const productosDOM = document.getElementById("productos");
 
-fetch("./bd/productos.json")
-  .then(res => res.json())
-  .then(data => {
-    productos = data;
-    renderizarProductos();
-  })
-  .catch(() => {
-    Swal.fire("Error al cargar productos", "", "error");
-  });
+if (productosDOM) {
+  fetch("./bd/productos.json")
+    .then(res => res.json())
+    .then(data => {
+      productos = data;
+      renderizarProductos();
+    })
+    .catch(() => {
+      Swal.fire("Error al cargar productos", "", "error");
+    });
+}
 
 const guardarCarrito = () => localStorage.setItem("carrito", JSON.stringify(carrito));
 
