@@ -21,7 +21,7 @@ Se trata de una tienda online simulada donde podés navegar, agregar productos a
 
 💡 El proyecto está publicado en GitHub Pages para que funcione correctamente desde cualquier navegador:
 
-👉 https://github.com/pablovenica7/Tienda-Ecommerce
+👉 https://pablovenica7.github.io/Tienda-Ecommerce/
 
 ---
 
